@@ -21,7 +21,7 @@ void insertion_sort_list(listint_t **list)
 		{
 			temp = sorted->prev;
 			sorted->prev = temp->prev;
-			if (temp->)
+			if (temp->prev)
 				temp->prev->next = sorted;
 			temp->next = sorted->next;
 			if (sorted->next)
