@@ -7,71 +7,77 @@
  */
 void cocktail_sort_list(listint_t **list)
 {
-	int swapped;
-	listint_t *temp;
+	listint_t *head, *a;
+	int c = 0, n = -1, m = -1;
 
-	if (list == NULL || *list == NULL || (*list)->next == NULL)
+	if (!list || !(*list) || (!((*list)->prev) && !((*list)->next)))
 		return;
-	do {
-		swapped = 0;
-		temp = *list;
-		while (temp->next != NULL)
+
+	head = *list;
+	while (m >= n)
+	{
+		n++;
+		while (head->next && c != m)
 		{
-			if (temp->next != NULL)
+			if (head->n > head->next->n)
 			{
-				swap_nodes(list, temp, temp->next);
-				swapped = 1;
-				print_list(*list);
+				a = head;
+			       _swap(&a, list);
+			       print_list(*list);
+			       head = a;
 			}
-			else
-				temp = temp->next;
+
+			c++;
+			head = head->next;
 		}
-		if (swapped == 0)
-			break;
-		swapped = 0;
-		temp = temp->prev;
-		while (temp->prev != NULL)
+
+		if (n == 0)
+			m = c;
+		m--;
+		while (head->prev && c >= n)
 		{
-			if (temp->n < temp->prev->n)
+			if (head->n < head->prev->n)
 			{
-				swap_nodes(list, temp->prev, temp);
-				swapped = 1;
+				a = head->prev;
+				_swap(&a, list);
 				print_list(*list);
+				head = a->next;
 			}
-			else
-				temp = temp->prev;
+			c--;
+			head = head->prev;
 		}
-	}while (swapped);
+	}
 }
 /**
  * swap_nodes - Swaps two nodes in a doubly linked list
  *
  * @list: Pointer to the head of the doubly linked list
- * @a: First node to swap
- * @b: Second node to swap
+ * @node: First node to swap
  */
-void swap_nodes(listint_t **list, listint_t *a, listint_t *b)
+void swap_nodes(listint_t **node, listint_t **list)
 {
-	listint_t *prev_a, *next_a, *prev_b, *next_b;
+	listint_t *tmp = *node, *tmp2, *tmp3;
 
-	if (a == NULL || b == NULL)
-		return;
-	prev_a = a->prev;
-	next_a = a->next;
-	prev_b = b->prev;
-	next_b = b->next;
 
-	if (prev_a != NULL)
-		prev_a->next =b;
-	else
-		*list = b;
-	if (next_b != NULL)
-		next_b->prev = a;
-	a->prev = prev_b;
-	if (next_b != NULL)
-		next_b->prev = a;
-	a->prev = prev_b;
-	a->next = next_b;
-	b->prev = prev_a;
-	b->next = a;
+	if (!(*node)->prev)
+		*list = (*node)->next;
+
+	tmp = tmp3 = *node;
+	tmp2 = tmp->next;
+
+	tmp->next = tmp2->next;
+	tmp3 = tmp->prev;
+	tmp->prev = tmp2;
+	tmp2->next = tmp;
+	tmp2->prev = tmp3;
+
+	if (tmp2->prev)
+		tmp2->prev->next = tmp2;
+
+
+	if (tmp->next)
+		tmp->next->prev = tmp;
+
+	*node = tmp2;
+
 }
